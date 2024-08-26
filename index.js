@@ -1,18 +1,16 @@
 const express = require('express');
 const path = require('path');
-const xlsx = require('xlsx');
+const fs = require('fs');
 
 const app = express();
 
-// 解析Excel文件
-function loadExcelData(filePath) {
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0]; // 假设使用第一个工作表
-    const worksheet = workbook.Sheets[sheetName];
-    return xlsx.utils.sheet_to_json(worksheet);
+// 解析JSON文件
+function loadJSONData(filePath) {
+    const data = fs.readFileSync(filePath);
+    return JSON.parse(data);
 }
 
-const data = loadExcelData('./database.xlsx');
+const data = loadJSONData(path.join(__dirname, 'database.json'));
 
 // 使用JSON中间件来解析POST请求体
 app.use(express.json());
